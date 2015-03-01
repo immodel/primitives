@@ -9,7 +9,12 @@
     "lodash.isarray": "~3.0.0",
     "lodash.toarray": "~3.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^2.1.0",
+    "models": "git://github.com/immodel/immodel",
+    "mocha": "^2.1.0",
+    "immodel": "git://github.com/immodel/immodel"
+  },
   "scripts": {
     "test": "mocha"
   },
