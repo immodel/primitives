@@ -1,5 +1,5 @@
 module.exports = function(model) {
-  require('./number')(model);
-  require('./string')(model);
-  require('./array')(model);
+  model.use(require('./number'));
+  model.use(require('./string'));
+  model.use(require('./array'));
 };

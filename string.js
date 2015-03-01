@@ -1,13 +1,15 @@
-require('../../')
-  .validator(isString, 'string')
-  .caster(toString)
-  .default('')
-  .type('string');
+module.exports = function(model) {
+  model
+    .validator(isString, 'string')
+    .caster(toString)
+    .default('')
+    .type('string');
 
-function isString(value) {
-  return 'string' === typeof value;
-}
+  function isString(value) {
+    return 'string' === typeof value;
+  }
 
-function toString(value) {
-  return value ? value.toString() : '';
-}
+  function toString(value) {
+    return value ? value.toString() : '';
+  }  
+};
