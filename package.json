@@ -1,6 +1,6 @@
 {
   "name": "immodel-primitives",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Add some default primitives to immodel",
   "main": "index.js",
   "dependencies": {
