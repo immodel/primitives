@@ -27,9 +27,9 @@ module.exports = function(model) {
     refresh(evt.doc);
   });
 
-  base.type('array', function(type) {
+  return function(type) {
     return base.attr('*', type);
-  });
+  };
 };
 
 function createArray(model) {

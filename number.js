@@ -1,9 +1,8 @@
 module.exports = function(model) {
-  model
+  return model
     .validator(isNumber)
     .caster(toNumber)
-    .default(0)
-    .type('number');
+    .default(0);
 
   function isNumber(value) {
     return 'number' === typeof value;

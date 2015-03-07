@@ -1,5 +1,6 @@
 var assert = require('assert');
-var model = require('immodel').bootstrap({types: require('..')});
+var model = require('immodel')
+  .use(require('immodel-base'), {types: require('..')});
 
 describe('types', function() {
   describe('array', function() {
