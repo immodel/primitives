@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
+var assert = require('assert');
 var model = require('immodel').bootstrap({types: require('../')});
 
 describe('types', function() {
@@ -11,11 +11,11 @@ describe('types', function() {
 
       var user = new User();
 
-      expect(user.get('groups').length).to.equal(0);
+      assert(user.get('groups').length === 0);
       user.get('groups').push('test');
-      expect(user.get('groups.0')).to.equal('test');
-      expect(user.get('groups')[0]).to.equal('test');
-      expect(user.get('groups').length).to.equal(1); 
+      assert(user.get('groups.0') === 'test');
+      assert(user.get('groups')[0] === 'test');
+      assert(user.get('groups').length === 1); 
     });
 
     it('should work with complex objects', function() {
@@ -31,21 +31,21 @@ describe('types', function() {
 
       // Push
       user.get('groups').push({id: 1, displayName: 'model group'});
-      expect(user.get('groups')[0].get('displayName')).to.equal('model group');
-      expect(user.get('groups.0.displayName')).to.equal('model group');
-      expect(user.get('groups.0').get('displayName')).to.equal('model group');
+      assert(user.get('groups')[0].get('displayName') === 'model group');
+      assert(user.get('groups.0.displayName') === 'model group');
+      assert(user.get('groups.0').get('displayName') === 'model group');
 
       // Splice
       user.get('groups').splice(1, 0, {id: 2, displayName: 'dobis'});
-      expect(user.get('groups')[1].get('displayName')).to.equal('dobis');
-      expect(user.get('groups').length).to.equal(2);
+      assert(user.get('groups')[1].get('displayName') === 'dobis');
+      assert(user.get('groups').length === 2);
 
       // Pop
       user.get('groups').pop();
-      expect(user.get('groups').length).to.equal(1);
+      assert(user.get('groups').length === 1);
 
       // Make sure it popped the right one
-      expect(user.get('groups.0.displayName')).to.equal('model group');
+      assert(user.get('groups.0.displayName') === 'model group');
     });
 
     it('should work with validation', function(done) {
@@ -57,8 +57,8 @@ describe('types', function() {
 
       var user = new User();
       user.validate(function(err) {
-        expect(err).not.to.be.null;
-        expect(err[0].key).to.equal('required');
+        assert(err !== null);
+        assert(err[0].key, 'required');
         done();
       });
     });
@@ -83,13 +83,13 @@ describe('types', function() {
       var share = new Share();
       share.get('attachments').push({objectType: 'question'});
 
-      expect(share.get('attachments.0.questionText')).to.equal('');
-      expect(share.get('attachments.0.url')).to.equal(undefined);
+      assert(share.get('attachments.0.questionText') === '');
+      assert(share.get('attachments.0.url') === undefined);
 
       share.get('attachments').push({objectType: 'video'});
 
-      expect(share.get('attachments.1.questionText')).to.equal(undefined);
-      expect(share.get('attachments.1.url')).to.equal(''); 
+      assert(share.get('attachments.1.questionText') === undefined);
+      assert(share.get('attachments.1.url') === ''); 
     }); 
   });
 });

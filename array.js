@@ -2,7 +2,6 @@ var isEmpty = require('lodash.isempty');
 var extend = require('lodash.assign');
 var isArray = require('lodash.isarray');
 var toArray = require('lodash.toarray');
-var _ = require('lodash');
 
 module.exports = function(model) {
   var base = model
