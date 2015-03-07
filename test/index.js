@@ -1,8 +1,8 @@
 var assert = require('assert');
 var model = require('immodel')
-  .use(require('immodel-base'), {types: require('..')});
+  .use(require('immodel-base'), {primitives: require('..')});
 
-describe('types', function() {
+describe('primitives', function() {
   describe('array', function() {
     var array = model.lookup('array');
 

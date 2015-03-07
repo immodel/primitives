@@ -4,9 +4,10 @@
   "description": "Add some default primitives to immodel",
   "main": "index.js",
   "dependencies": {
+    "immodel-base": "git://github.com/immodel/base",
     "lodash.assign": "~3.0.0",
-    "lodash.isempty": "~3.0.0",
     "lodash.isarray": "~3.0.0",
+    "lodash.isempty": "~3.0.0",
     "lodash.toarray": "~3.0.0"
   },
   "devDependencies": {
