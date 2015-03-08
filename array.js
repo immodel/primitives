@@ -40,6 +40,8 @@ function createArray(model) {
     return self;
   };
   ArrayModel.prototype = Object.create(ArrayDocument.prototype);
+  // These do not need to be deep, because the model
+  // passed in has already been cloned
   extend(ArrayModel.prototype, model.prototype);
   extend(ArrayModel, model);
   return ArrayModel;  
