@@ -1,6 +1,6 @@
 module.exports = function(model) {
   return model
-    .validator(isNumber)
+    .validator(isNumber, 'number')
     .caster(toNumber)
     .default(0);
 
