@@ -13,10 +13,11 @@ describe('primitives', function() {
       var user = new User();
 
       assert(user.get('groups').length === 0);
-      user.get('groups').push('test');
-      assert(user.get('groups.0') === 'test');
-      assert(user.get('groups')[0] === 'test');
-      assert(user.get('groups').length === 1); 
+      user = user.set('groups', user.get('groups').push('test'));
+
+      assert(user.get('groups.0').value === 'test');
+      assert(user.get('groups')[0].value === 'test');
+      assert(user.get('groups').length === 1);
     });
 
     it('should work with complex objects', function() {
@@ -31,22 +32,22 @@ describe('primitives', function() {
       var user = new User();
 
       // Push
-      user.get('groups').push({id: 1, displayName: 'model group'});
-      assert(user.get('groups')[0].get('displayName') === 'model group');
-      assert(user.get('groups.0.displayName') === 'model group');
-      assert(user.get('groups.0').get('displayName') === 'model group');
+      user = user.set('groups', user.get('groups').push({id: 1, displayName: 'model group'}));
+      assert(user.get('groups')[0].get('displayName').value === 'model group');
+      assert(user.get('groups.0.displayName').value === 'model group');
+      assert(user.get('groups.0').get('displayName').value === 'model group');
 
       // Splice
-      user.get('groups').splice(1, 0, {id: 2, displayName: 'dobis'});
-      assert(user.get('groups')[1].get('displayName') === 'dobis');
+      user = user.set('groups', user.get('groups').splice(1, 0, {id: 2, displayName: 'dobis'}));
+      assert(user.get('groups')[1].get('displayName').value === 'dobis');
       assert(user.get('groups').length === 2);
 
       // Pop
-      user.get('groups').pop();
+      user = user.set('groups', user.get('groups').pop());
       assert(user.get('groups').length === 1);
 
       // Make sure it popped the right one
-      assert(user.get('groups.0.displayName') === 'model group');
+      assert(user.get('groups.0.displayName').value === 'model group');
     });
 
     it('should work with validation', function(done) {
@@ -59,7 +60,7 @@ describe('primitives', function() {
       var user = new User();
       user.validate(function(err) {
         assert(err !== null);
-        assert(err[0].key, 'required');
+        assert(err.key, 'required');
         done();
       });
     });
@@ -82,15 +83,15 @@ describe('primitives', function() {
         .type('video');
 
       var share = new Share();
-      share.get('attachments').push({objectType: 'question'});
+      share = share.set('attachments', share.get('attachments').push({objectType: 'question'}));
 
-      assert(share.get('attachments.0.questionText') === '');
-      assert(share.get('attachments.0.url') === undefined);
+      assert(share.get('attachments.0.questionText').value === '');
+      assert(share.get('attachments.0.url').value === undefined);
 
-      share.get('attachments').push({objectType: 'video'});
+      share = share.set('attachments', share.get('attachments').push({objectType: 'video'}));
 
-      assert(share.get('attachments.1.questionText') === undefined);
-      assert(share.get('attachments.1.url') === ''); 
-    }); 
+      assert(share.get('attachments.1.questionText').value === undefined);
+      assert(share.get('attachments.1.url').value === '');
+    });
   });
 });

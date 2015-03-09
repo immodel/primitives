@@ -1,14 +1,14 @@
-module.exports = function(model) {
-  return model
+module.exports = function() {
+  return this
     .validator(isNumber, 'number')
-    .caster(toNumber)
-    .default(0);
+    .default(0)
+    .caster(toNumber);
 
-  function isNumber(value) {
-    return 'number' === typeof value;
+  function isNumber() {
+    return 'number' === typeof this.value;
   }
 
   function toNumber(value) {
     return Number(value);
-  }  
+  }
 };

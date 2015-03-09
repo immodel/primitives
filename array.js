@@ -3,17 +3,17 @@ var extend = require('lodash.assign');
 var isArray = require('lodash.isarray');
 var toArray = require('lodash.toarray');
 
-module.exports = function(model) {
-  var base = model
-    .validator(function(val) {
-      return val instanceof ArrayDocument;
+module.exports = function() {
+  var base = this
+    .validator(function() {
+      return this.value instanceof ArrayDocument;
     }, 'array')
     .caster(toArray)
     .default([])
-    .requiredValidator(function(value) {
-      return value && value.length > 0;
+    .requiredValidator(function() {
+      return this.value && this.value.length > 0;
     });
-  
+
   base = createArray(base);
 
   var use = base.use;
@@ -22,9 +22,17 @@ module.exports = function(model) {
   base.use = function() {
     return createArray(use.apply(this, arguments));
   };
-  
+
   base.on('init', function(evt) {
-    refresh(evt.doc);
+    var doc = evt.doc;
+    var model = doc.model;
+
+    doc.forEach(function(item, idx) {
+      var type = model.attr(idx.toString());
+      doc[idx] = type.isDocument(item)
+        ? item
+        : new type(item);
+    });
   });
 
   return function(type) {
@@ -35,39 +43,36 @@ module.exports = function(model) {
 function createArray(model) {
   var ArrayModel = function(arr) {
     arr = arr || [];
-    var self = model.call(this, this);
-    ArrayDocument.call(self, arr);
-    return self;
+    ArrayDocument.call(this, arr);
+    return model.call(this, this);
   };
   ArrayModel.prototype = Object.create(ArrayDocument.prototype);
   // These do not need to be deep, because the model
   // passed in has already been cloned
   extend(ArrayModel.prototype, model.prototype);
+  ArrayModel.prototype.model = ArrayModel;
   extend(ArrayModel, model);
-  return ArrayModel;  
+  return ArrayModel;
 }
 
 
 function ArrayDocument(arr) {
-  this.push.apply(this, arr);
+  Array.prototype.push.apply(this, arr);
 }
 
 ArrayDocument.prototype = Object.create(Array.prototype);
 
-// We only care about the subset of array mutators
-// that may add new items.  All we care about
-// is ensuring that array elements have been coerced
-// after being added, otherwise, we behave just like
-// a normal array.
-var mutators = ['push', 'splice', 'unshift'];
+var mutators = [
+  'push',
+  'splice',
+  'unshift',
+  'pop',
+  'shift',
+  'reverse',
+  'sort'
+];
 
 function refresh(arr) {
-  // Getting each item in the array will cause
-  // it to be wrapped in a model if it hasn't
-  // already been.  If it has, then it will
-  // be a noop (which is why we dont care about
-  // the fact that we are almost always executing
-  // this function many more times than necessary).
   arr.forEach(function(item, idx) {
     arr.get(idx.toString());
   });
@@ -75,8 +80,8 @@ function refresh(arr) {
 
 mutators.forEach(function(method) {
   ArrayDocument.prototype[method] = function() {
-    var res = Array.prototype[method].apply(this, arguments);
-    refresh(this);
-    return res;
+    var arr = this.slice();
+    arr[method].apply(arr, arguments);
+    return (new this.model(arr));
   }
 });

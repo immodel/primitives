@@ -1,14 +1,16 @@
-module.exports = function(model) {
-  return model
+module.exports = function() {
+  return this
     .validator(isString, 'string')
     .caster(toString)
     .default('');
 
-  function isString(value) {
-    return 'string' === typeof value;
+  function isString() {
+    return 'string' === typeof this.value;
   }
 
   function toString(value) {
-    return value ? value.toString() : '';
-  }  
+    return value
+      ? value.toString()
+      : '';
+  }
 };
